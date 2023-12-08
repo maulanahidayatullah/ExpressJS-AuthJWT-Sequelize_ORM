@@ -7,28 +7,36 @@ const { ACCESS_TOKEN } = process.env;
 
 
 module.exports = {
-    signup(req, res) {
-        return UserModel
-            .create({
-                name: req.body.name,
-                email: req.body.email,
-                password: bcrypt.hashSync(req.body.password, 8)
-            }).then(user => {
-                res.status(200).send({
-                    auth: true,
-                    message: "User registered successfully!",
-                    data: user,
-                });
-            }).catch(err => {
-                res.status(500).send({
-                    auth: false,
-                    message: "Error",
-                    errors: err
-                });
-            })
+    signup: async (req, res) => {
+        try {
+            return UserModel
+                .create({
+                    name: req.body.name,
+                    email: req.body.email,
+                    password: bcrypt.hashSync(req.body.password, 8)
+                }).then(user => {
+                    res.status(200).send({
+                        auth: true,
+                        message: "User registered successfully!",
+                        data: user,
+                    });
+                }).catch(err => {
+                    res.status(500).send({
+                        auth: false,
+                        message: "Error",
+                        errors: err
+                    });
+                })
+        } catch (error) {
+            res.status(500).send({
+                auth: false,
+                message: "Error",
+                errors: err
+            });
+        }
     },
 
-    signin(req, res) {
+    signin: async (req, res) => {
         try {
             return UserModel
                 .findOne({
