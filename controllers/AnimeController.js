@@ -54,11 +54,93 @@ module.exports = {
                     message: "Internal Server Error",
                 }));
         } catch (error) {
-            res.status(500).send({
-                auth: false,
-                message: "Error",
-                errors: err
+            return res.json({
+                status: 500,
+                message: "Internal Server Error",
             });
         }
+    },
+
+    getById: async (req, res) => {
+        return AnimeModel
+            .findByPk(req.params.id, {
+                // include: [{
+                //     model: Computer,
+                //     as: 'computer'
+                // }],
+            })
+            .then((anime) => {
+                if (!anime) {
+                    return res.status(400).json({ message: "Anime Not Found !", statuscode: 400 });
+                }
+                return res.json({
+                    status: 200,
+                    message: "Anime Found !",
+                    data: anime
+                });
+            })
+            .catch((error) => res.json({
+                status: 500,
+                message: "Internal Server Error",
+            }));
+    },
+    update: async (req, res) => {
+        try {
+            return AnimeModel
+                .findByPk(req.params.id)
+                .then(anime => {
+                    if (!anime) {
+                        return res.status(400).json({ message: "Anime Not Found !", statuscode: 400 });
+                    }
+                    return anime
+                        .update({
+                            title: req.body.title || anime.name,
+                            content: req.body.content || anime.nik
+                        })
+                        .then(() => res.json({
+                            status: 200,
+                            message: "Anime Successfully Updated",
+                            data: anime
+                        }))
+                        .catch((error) => res.json({
+                            status: 500,
+                            message: "Internal Server Error",
+                        }));
+                })
+                .catch((error) => res.json({
+                    status: 500,
+                    message: "Internal Server Error",
+                }));
+        }
+        catch (error) {
+            return res.json({
+                status: 500,
+                message: "Internal Server Error",
+            });
+        }
+    },
+    delete: async (req, res) => {
+        return AnimeModel
+            .findByPk(req.params.id)
+            .then(anime => {
+                if (!anime) {
+                    return res.status(400).json({ message: "Anime Not Found !", statuscode: 400 });
+                }
+                return anime
+                    .destroy()
+                    .then(() => res.json({
+                        status: 200,
+                        message: "Anime Successfully Deleted",
+                        data: anime
+                    }))
+                    .catch((error) => res.json({
+                        status: 500,
+                        message: "Internal Server Error",
+                    }));
+            })
+            .catch((error) => res.json({
+                status: 500,
+                message: "Internal Server Error",
+            }));
     },
 }
