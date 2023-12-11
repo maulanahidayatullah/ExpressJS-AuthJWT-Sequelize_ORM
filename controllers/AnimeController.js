@@ -1,4 +1,4 @@
-const AnimeModel = require('../models').Anime;
+const AnimeModel = require('../models').AnimeModel;
 const Validator = require('fastest-validator');
 const v = new Validator();
 

@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../models/index');
-const UserModel = require('../models').UserModel
+const UserModel = require('../models').UserModel;
 require('dotenv').config();
 const { ACCESS_TOKEN } = process.env;
 

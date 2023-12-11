@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-    const Anime = sequelize.define(
-        "Anime",
+    const AnimeModel = sequelize.define(
+        "AnimeModel",
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -24,5 +24,5 @@ module.exports = (sequelize, DataTypes) => {
             tableName: "anime"
         }
     )
-    return Anime;
+    return AnimeModel;
 }
