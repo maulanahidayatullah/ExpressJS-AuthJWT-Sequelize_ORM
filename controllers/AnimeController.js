@@ -1,20 +1,43 @@
-const AnimeModel = require('../models').AnimeModel;
+const { AnimeModel } = require('../models');
+const { KategoriModel } = require('../models');
 const Validator = require('fastest-validator');
 const v = new Validator();
-
 
 module.exports = {
     list: async (req, res) => {
         try {
             return AnimeModel
-                .findAll()
-                .then((anime) =>
+                .findAll({
+                    include: [{
+                        model: KategoriModel,
+                        as: 'kategori'
+                    }],
+                })
+                .then((animes) => {
+
+                    let data = animes.map((anime) => ({
+                        title: anime.title,
+                        content: anime.content,
+                        category: anime.kategori.nama,
+                    }));
+
                     res.json({
                         status: 200,
                         message: "Success Retrieve Data",
-                        data: anime
-                    }))
+                        data: data
+                    })
+                }
+                    // animes.forEach((anime) => {
+                    //     console.log('Anime:', anime.title);
+                    //     console.log('Category:', anime.kategori.nama);
+                    //     console.log('---');
+                    // }),
+
+
+
+                )
                 .catch((error) => {
+                    console.log(error);
                     res.json({
                         status: 500,
                         message: "Internal Server Error",

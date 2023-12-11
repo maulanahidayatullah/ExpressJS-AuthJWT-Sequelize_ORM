@@ -7,6 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/user');
 var animeRouter = require('./routes/anime');
+var kategoriRouter = require('./routes/kategori');
 
 var app = express();
 
@@ -19,5 +20,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
 app.use('/anime', animeRouter);
+app.use('/kategori', kategoriRouter);
 
 module.exports = app;

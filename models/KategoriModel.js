@@ -1,16 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
-    const AnimeModel = sequelize.define(
-        "AnimeModel",
+    const KategoriModel = sequelize.define(
+        "KategoriModel",
         {
             id: {
                 type: DataTypes.INTEGER,
                 primaryKey: true,
                 autoIncrement: true,
             },
-            title: {
-                type: DataTypes.STRING,
-            },
-            content: {
+            nama: {
                 type: DataTypes.STRING,
             },
             createdAt: {
@@ -21,16 +18,17 @@ module.exports = (sequelize, DataTypes) => {
             },
         },
         {
-            tableName: "anime"
+            tableName: "kategori"
         }
     );
 
-    AnimeModel.associate = (models) => {
-        AnimeModel.belongsTo(models.KategoriModel, {
+    KategoriModel.associate = (models) => {
+        KategoriModel.hasMany(models.AnimeModel, {
             foreignKey: 'kategori_id',
-            as: 'kategori',
+            as: 'anime',
         });
     };
 
-    return AnimeModel;
+    return KategoriModel;
 }
+
