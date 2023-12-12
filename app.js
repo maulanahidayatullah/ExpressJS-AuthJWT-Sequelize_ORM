@@ -24,7 +24,6 @@ app.use('/user', usersRouter);
 app.use('/anime', animeRouter);
 app.use('/kategori', kategoriRouter);
 
-
 app.listen(port, console.log("Server is running on port " + port));
 
 module.exports = app;
