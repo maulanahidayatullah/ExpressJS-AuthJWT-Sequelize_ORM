@@ -1,5 +1,6 @@
 const { AnimeModel } = require('../models');
 const { KategoriModel } = require('../models');
+const { AnimeKategoriModel } = require('../models');
 const Validator = require('fastest-validator');
 const v = new Validator();
 
@@ -14,11 +15,12 @@ module.exports = {
                     }],
                 })
                 .then((animes) => {
-
-                    let data = animes.map((anime) => ({
+                    const data = animes.map((anime) => ({
                         title: anime.title,
                         content: anime.content,
-                        category: anime.kategori.nama,
+                        kategori: anime.kategori.map((kategori) => ({
+                            nama: kategori.nama,
+                        })),
                     }));
 
                     res.json({
@@ -26,16 +28,7 @@ module.exports = {
                         message: "Success Retrieve Data",
                         data: data
                     })
-                }
-                    // animes.forEach((anime) => {
-                    //     console.log('Anime:', anime.title);
-                    //     console.log('Category:', anime.kategori.nama);
-                    //     console.log('---');
-                    // }),
-
-
-
-                )
+                })
                 .catch((error) => {
                     console.log(error);
                     res.json({
@@ -49,16 +42,18 @@ module.exports = {
     },
     create: async (req, res) => {
         try {
-            const rule = {
+            const schema = {
                 title: "string",
-                content: "string"
+                content: "string",
+                kategori_id: { type: 'array', items: 'number', min: 1 },
             }
 
-            const validate = v.validate(req.body, rule);
-            if (validate.length) {
+
+            const validation = v.compile(schema)(req.body);
+            if (validation !== true) {
                 return res.json({
-                    status: 500,
-                    message: "Internal Server Error",
+                    status: 400,
+                    message: validation,
                 })
             }
 
@@ -67,16 +62,33 @@ module.exports = {
                     title: req.body.title,
                     content: req.body.content,
                 })
-                .then((anime) => res.json({
-                    status: 200,
-                    message: "Created Successfully",
-                    data: anime
-                }))
+                .then((anime) => {
+                    req.body.kategori_id.forEach((kategori_id) => {
+                        AnimeKategoriModel
+                            .create({
+                                anime_id: anime.id,
+                                kategori_id: kategori_id,
+                            })
+                            .catch((error) => res.json({
+                                error: error,
+                                status: 500,
+                                message: "Internal Server Error",
+                            }))
+                    })
+
+                    return res.json({
+                        status: 200,
+                        message: "Anime Created Successfully",
+                        anime: anime
+                    });
+                })
                 .catch((error) => res.json({
+                    error: error,
                     status: 500,
                     message: "Internal Server Error",
                 }));
         } catch (error) {
+            console.log(error);
             return res.json({
                 status: 500,
                 message: "Internal Server Error",
@@ -88,8 +100,8 @@ module.exports = {
         return AnimeModel
             .findByPk(req.params.id, {
                 // include: [{
-                //     model: Computer,
-                //     as: 'computer'
+                //     model: KategoriModel,
+                //     as: 'kategori'
                 // }],
             })
             .then((anime) => {

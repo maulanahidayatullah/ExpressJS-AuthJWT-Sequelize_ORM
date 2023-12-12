@@ -26,8 +26,9 @@ module.exports = (sequelize, DataTypes) => {
     );
 
     AnimeModel.associate = (models) => {
-        AnimeModel.belongsTo(models.KategoriModel, {
-            foreignKey: 'kategori_id',
+        AnimeModel.belongsToMany(models.KategoriModel, {
+            through: 'anime_kategori',
+            foreignKey: 'anime_id',
             as: 'kategori',
         });
     };

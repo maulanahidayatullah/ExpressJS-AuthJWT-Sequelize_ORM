@@ -23,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     );
 
     KategoriModel.associate = (models) => {
-        KategoriModel.hasMany(models.AnimeModel, {
+        KategoriModel.belongsToMany(models.AnimeModel, {
+            through: 'anime_kategori',
             foreignKey: 'kategori_id',
             as: 'anime',
         });

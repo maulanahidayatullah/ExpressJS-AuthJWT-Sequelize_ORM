@@ -28,7 +28,6 @@ module.exports = {
                         message: "Success Retrieve Data",
                         data: data
                     });
-
                 })
                 .catch((error) => {
                     console.log(error);
@@ -45,123 +44,124 @@ module.exports = {
             })
         }
     },
-    // create: async (req, res) => {
-    //     try {
-    //         const rule = {
-    //             title: "string",
-    //             content: "string"
-    //         }
+    create: async (req, res) => {
+        try {
+            const rule = {
+                nama: "string",
+            }
 
-    //         const validate = v.validate(req.body, rule);
-    //         if (validate.length) {
-    //             return res.json({
-    //                 status: 500,
-    //                 message: "Internal Server Error",
-    //             })
-    //         }
+            const validate = v.validate(req.body, rule);
+            if (validate.length) {
+                return res.json({
+                    status: 500,
+                    message: "Internal Server Error",
+                })
+            }
 
-    //         return AnimeModel
-    //             .create({
-    //                 title: req.body.title,
-    //                 content: req.body.content,
-    //             })
-    //             .then((anime) => res.json({
-    //                 status: 200,
-    //                 message: "Created Successfully",
-    //                 data: anime
-    //             }))
-    //             .catch((error) => res.json({
-    //                 status: 500,
-    //                 message: "Internal Server Error",
-    //             }));
-    //     } catch (error) {
-    //         return res.json({
-    //             status: 500,
-    //             message: "Internal Server Error",
-    //         });
-    //     }
-    // },
+            return KategoriModel
+                .create({
+                    nama: req.body.nama,
+                })
+                .then((kategori) => res.json({
+                    status: 200,
+                    message: "Created Successfully",
+                    data: kategori
+                }))
+                .catch((error) => res.json({
+                    status: 500,
+                    message: "Internal Server Error",
+                }));
+        } catch (error) {
+            console.log(error);
+            return res.json({
+                status: 500,
+                message: "Internal Server Error",
+            });
+        }
+    },
 
-    // getById: async (req, res) => {
-    //     return AnimeModel
-    //         .findByPk(req.params.id, {
-    //             // include: [{
-    //             //     model: Computer,
-    //             //     as: 'computer'
-    //             // }],
-    //         })
-    //         .then((anime) => {
-    //             if (!anime) {
-    //                 return res.status(400).json({ message: "Anime Not Found !", statuscode: 400 });
-    //             }
-    //             return res.json({
-    //                 status: 200,
-    //                 message: "Anime Found !",
-    //                 data: anime
-    //             });
-    //         })
-    //         .catch((error) => res.json({
-    //             status: 500,
-    //             message: "Internal Server Error",
-    //         }));
-    // },
-    // update: async (req, res) => {
-    //     try {
-    //         return AnimeModel
-    //             .findByPk(req.params.id)
-    //             .then(anime => {
-    //                 if (!anime) {
-    //                     return res.status(400).json({ message: "Anime Not Found !", statuscode: 400 });
-    //                 }
-    //                 return anime
-    //                     .update({
-    //                         title: req.body.title || anime.name,
-    //                         content: req.body.content || anime.nik
-    //                     })
-    //                     .then(() => res.json({
-    //                         status: 200,
-    //                         message: "Anime Successfully Updated",
-    //                         data: anime
-    //                     }))
-    //                     .catch((error) => res.json({
-    //                         status: 500,
-    //                         message: "Internal Server Error",
-    //                     }));
-    //             })
-    //             .catch((error) => res.json({
-    //                 status: 500,
-    //                 message: "Internal Server Error",
-    //             }));
-    //     }
-    //     catch (error) {
-    //         return res.json({
-    //             status: 500,
-    //             message: "Internal Server Error",
-    //         });
-    //     }
-    // },
-    // delete: async (req, res) => {
-    //     return AnimeModel
-    //         .findByPk(req.params.id)
-    //         .then(anime => {
-    //             if (!anime) {
-    //                 return res.status(400).json({ message: "Anime Not Found !", statuscode: 400 });
-    //             }
-    //             return anime
-    //                 .destroy()
-    //                 .then(() => res.json({
-    //                     status: 200,
-    //                     message: "Anime Successfully Deleted",
-    //                     data: anime
-    //                 }))
-    //                 .catch((error) => res.json({
-    //                     status: 500,
-    //                     message: "Internal Server Error",
-    //                 }));
-    //         })
-    //         .catch((error) => res.json({
-    //             status: 500,
-    //             message: "Internal Server Error",
-    //         }));
-    // },
+    getById: async (req, res) => {
+        return KategoriModel
+            .findByPk(req.params.id, {
+                // include: [{
+                //     model: AnimeModel,
+                //     as: 'anime'
+                // }],
+            })
+            .then((kategori) => {
+                if (!kategori) {
+                    return res.status(400).json({ message: "Kategori Not Found !", statuscode: 400 });
+                }
+                return res.json({
+                    status: 200,
+                    message: "Data Found !",
+                    data: kategori
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+                return res.json({
+                    status: 500,
+                    message: "Internal Server Error",
+                })
+            });
+    },
+    update: async (req, res) => {
+        try {
+            return KategoriModel
+                .findByPk(req.params.id)
+                .then(kategori => {
+                    if (!kategori) {
+                        return res.status(400).json({ message: "Kategori Not Found !", statuscode: 400 });
+                    }
+                    return kategori
+                        .update({
+                            nama: req.body.nama || kategori.nama
+                        })
+                        .then(() => res.json({
+                            status: 200,
+                            message: "Data Successfully Updated",
+                            data: kategori
+                        }))
+                        .catch((error) => res.json({
+                            status: 500,
+                            message: "Internal Server Error",
+                        }));
+                })
+                .catch((error) => res.json({
+                    status: 500,
+                    message: "Internal Server Error",
+                }));
+        }
+        catch (error) {
+            return res.json({
+                status: 500,
+                message: "Internal Server Error",
+            });
+        }
+    },
+    delete: async (req, res) => {
+        return KategoriModel
+            .findByPk(req.params.id)
+            .then(kategori => {
+                if (!kategori) {
+                    return res.status(400).json({ message: "Kategori Not Found !", statuscode: 400 });
+                }
+                return kategori
+                    .destroy()
+                    .then(() => res.json({
+                        status: 200,
+                        message: "Kategori Successfully Deleted",
+                        data: kategori
+                    }))
+                    .catch((error) => res.json({
+                        status: 500,
+                        message: "Internal Server Error",
+                    }));
+            })
+            .catch((error) => res.json({
+                status: 500,
+                message: "Internal Server Error",
+            }));
+    },
 }
